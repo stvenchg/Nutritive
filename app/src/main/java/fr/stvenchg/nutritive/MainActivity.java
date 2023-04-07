@@ -27,6 +27,7 @@ import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.mlkit.vision.barcode.BarcodeScanner;
@@ -79,6 +80,13 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
         textureView = findViewById(R.id.texture_view);
         textureView.setSurfaceTextureListener(this);
         requestCameraPermission();
+
+        // Crée la vue OverlayView et l'ajoute au RelativeLayout
+        OverlayView overlayView = new OverlayView(this);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        addContentView(overlayView, layoutParams);
     }
 
     private void requestCameraPermission() {
