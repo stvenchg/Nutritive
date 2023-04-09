@@ -27,6 +27,8 @@ import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -53,6 +55,8 @@ import android.Manifest;
 
 public class MainActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener {
 
+    private ImageButton menuImageButton;
+
     private TextureView textureView;
     private CameraDevice cameraDevice;
     private CaptureRequest.Builder captureRequestBuilder;
@@ -65,21 +69,57 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
 
     private boolean isScanned = false;
 
+    private ImageButton flashImageButton;
+
+    private boolean isFlashOn = false;
+
+    private MediaPlayer mp;
+
     @Override
     protected void onResume() {
         super.onResume();
         isScanned = false;
     }
 
+    protected void onPause() {
+        super.onPause();
+        if (isFlashOn) {
+            toggleFlash();
+        }
+
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+
+        // Création du lecteur multimédia
+        mp = MediaPlayer.create(MainActivity.this, R.raw.beep);
+
+        menuImageButton = findViewById(R.id.main_imagebutton_menu);
 
         textureView = findViewById(R.id.texture_view);
         textureView.setSurfaceTextureListener(this);
         requestCameraPermission();
+
+        flashImageButton = findViewById(R.id.main_imagebutton_flash);
+
+        flashImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleFlash();
+            }
+        });
+
+        menuImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MenuActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Crée la vue OverlayView et l'ajoute au RelativeLayout
         OverlayView overlayView = new OverlayView(this);
@@ -155,6 +195,20 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
                             Intent intent = new Intent(MainActivity.this, ProductInfoActivity.class);
                             intent.putExtra("barcode", barcodeValue);
                             startActivity(intent);
+                            mp.start();
+
+                            // Libérer les ressources du MediaPlayer
+                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mediaPlayer) {
+                                    mp.reset();
+                                    mp.release();
+                                }
+                            });
+
+                            if (isFlashOn) {
+                                toggleFlash();
+                            }
                         }
                     }
                 })
@@ -296,6 +350,28 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
         public int compare(Size lhs, Size rhs) {
             return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
                     (long) rhs.getWidth() * rhs.getHeight());
+        }
+    }
+
+    private void toggleFlash() {
+        if (cameraDevice == null || captureRequestBuilder == null) {
+            return;
+        }
+
+        try {
+            if (isFlashOn) {
+                captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                flashImageButton.setImageResource(R.drawable.ic_flash_off);
+            } else {
+                captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+                flashImageButton.setImageResource(R.drawable.ic_flash_on);
+            }
+
+            isFlashOn = !isFlashOn;
+            captureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
+
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
         }
     }
 }

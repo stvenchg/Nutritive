@@ -29,6 +29,18 @@ public class ProductResponse {
         @SerializedName("image_url")
         private String imageUrl;
 
+        private String quantity;
+
+        @SerializedName("nutriscore_grade")
+        private String nutriscoreGrade;
+
+        // Ajout des champs pour les ingrédients et les allergènes
+        @SerializedName("ingredients_text")
+        private String ingredientsText;
+
+        @SerializedName("allergens")
+        private String allergens;
+
         private List<NutrientLevel> nutrientLevels;
 
         public String getProductName() {
@@ -43,15 +55,30 @@ public class ProductResponse {
             return imageUrl;
         }
 
+        public String getQuantity() {
+            return quantity;
+        }
+
+        public String getNutriscoreGrade() {
+            return nutriscoreGrade;
+        }
+
         public List<NutrientLevel> getNutrientLevels() {
             return nutrientLevels;
+        }
+
+        public String getIngredientsText() {
+            return ingredientsText;
+        }
+
+        public String getAllergens() {
+            return allergens;
         }
 
         public static class NutrientLevel {
 
             @SerializedName("nutrient_id")
             private String nutrientId;
-
             private String level;
 
             public String getNutrientId() {

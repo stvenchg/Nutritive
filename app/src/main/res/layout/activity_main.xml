@@ -5,9 +5,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/main_linearlayout_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/grey_1000">
+
+        <ImageButton
+            android:id="@+id/main_imagebutton_menu"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:src="@drawable/ic_menu"
+            app:tint="@color/white" />
+
+    </LinearLayout>
+
     <TextureView
         android:id="@+id/texture_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/main_linearlayout_bar" />
+
+    <LinearLayout
+        android:id="@+id/main_linearlayout_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="64dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/btn_rounded_grey_1000"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:weightSum="3">
+
+        <ImageButton
+            android:id="@+id/main_imagebutton_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:src="@drawable/ic_image"
+            app:tint="@color/white"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/main_imagebutton_entermanually"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:src="@drawable/ic_barcode"
+            app:tint="@color/white"
+            android:layout_weight="1"/>
+
+        <ImageButton
+            android:id="@+id/main_imagebutton_flash"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:src="@drawable/ic_flash_off"
+            app:tint="@color/white"
+            android:layout_weight="1"/>
+
+
+    </LinearLayout>
 
 </RelativeLayout>
